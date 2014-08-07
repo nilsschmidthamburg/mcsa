@@ -1,0 +1,98 @@
+@(data : Seq[CollectionDataSet])
+<!DOCTYPE html>
+
+@import play.mvc.Http.Context.Implicit._
+
+<html>
+<head>
+<title>Mongo Collection Snapshot Analyzer</title>
+<link rel='stylesheet'
+	href='@routes.Assets.at("lib/bootstrap/css/bootstrap.min.css")'>
+<link rel="stylesheet" media="screen" href="@routes.Assets.at("stylesheets/main.css")">
+<link rel="shortcut icon" type="image/png" href="@routes.Assets.at("images/favicon.png")">
+
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
+<script type="text/javascript" src="@routes.Assets.at("lib/bootstrap/js/bootstrap.min.js")"></script>
+<script type="text/javascript" src="//www.google.com/jsapi"></script>
+<script type="text/javascript">
+	google.load('visualization', '1', {
+		packages : [ 'corechart' ]
+	});
+</script>
+<script type="text/javascript">
+	function drawGraphs() {
+		// Create the data table for the Correlation Graph 
+		var dataCorrelation = new google.visualization.DataTable();
+		// TODO Create correlation Graph
+			
+		@for(entry <- data) {
+			// Detail Graphs
+			
+			@for(graph <- entry.graphs) {
+				@defining(entry.collectionName + graph.description.replace(' ', 'a').replace('(', 'a').replace(')', 'a')) { javaScriptId =>
+				
+					// Create the data table for @(entry.collectionName) @(graph.description.replace(' ', 'a').replace('(', 'a').replace(')', 'a').replace(' ', 'a').replace('(', 'a').replace(')', 'a'))
+					var @(javaScriptId) = new google.visualization.DataTable();
+					@(javaScriptId).addColumn('string', 'Time');
+					@(javaScriptId).addColumn('number', '@(graph.description)');
+					@(javaScriptId).addRows(@Html(graph.asJsArray));
+		
+					// Instantiate and draw our chart, passing in some options.
+					var @(javaScriptId)_chart = new google.visualization.LineChart(
+							document.getElementById('@(javaScriptId)_div'));
+					
+					// Set chart options
+					var options = {
+						chartArea: { left: 100, top: 30, width: "90%", height: "65%" },
+                     	'legend' : 'none',
+						'title' : '@(graph.description)'
+					};
+					
+					@(javaScriptId)_chart.draw(@(javaScriptId), options);
+				}
+			}
+		}
+	}
+
+	google.setOnLoadCallback(drawGraphs);
+</script>
+
+
+</head>
+<body>
+	<div class="navbar navbar-inverse navbar-fixed-top">
+		<div class="navbar-inner">
+			<div class="container">
+				<a class="navbar-brand" href="#">Mongo Collection Snapshot Analyzer</a>
+			</div>
+		</div>
+	</div>
+
+	<div id="collections" class="container">
+		@if(data.isEmpty) {
+			<p>No graph data collected yet. Please come back later...</p>
+		} else {
+			<div class="panel-group" id="accordion">
+				@data.map { entry =>
+					<div class="panel panel-default">
+						<div class="panel-heading">
+							<h3 class="panel-title">
+								<a data-toggle="collapse" data-parent="#accordion" href="#collapse@(entry.collectionName)">@entry.collectionName</a>
+							</h3>
+						</div>
+						<div id="collapse@(entry.collectionName)" class="panel-collapse collapse in">
+							<div class="panel-body">
+								@entry.graphs.map { graph =>
+									@defining(entry.collectionName + graph.description.replace(' ', 'a').replace('(', 'a').replace(')', 'a')) { javaScriptId =>
+										<div id="@(javaScriptId)_div"class="graph" ></div>
+									}
+								}
+							</div>
+						</div>
+					</div>
+				}
+			</div>
+		}
+	</div>
+</body>
+</html>
