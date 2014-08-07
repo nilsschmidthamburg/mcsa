@@ -7,10 +7,10 @@ The collections to be analyzed can be configured in ```conf/application.conf```
 
 ## Runnign the app
 Execute:
-```sbt run```
+``` sbt run ```
 
 In your favorite browser navigate to:
-```http://localhost:9000/```
+``` http://localhost:9000/ ```
 
 ## Technologies
 Mongo Collection Snapshot Analyser is implemented using the following technologies (among others):
