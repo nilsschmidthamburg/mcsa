@@ -23,5 +23,5 @@ Mongo Collection Snapshot Analyser is implemented using the following technologi
  * [Coffee Script](http://coffeescript.org/)
  * [Less](http://lesscss.org/)
 
- ## Screenshots
+## Screenshots
 ![ScreenShot 01](screenshots/mcsa_screenshot_01.png)
