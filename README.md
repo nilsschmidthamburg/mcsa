@@ -22,3 +22,6 @@ Mongo Collection Snapshot Analyser is implemented using the following technologi
  * [Google Charts](https://developers.google.com/chart/)
  * [Coffee Script](http://coffeescript.org/)
  * [Less](http://lesscss.org/)
+
+ ## Screenshots
+![ScreenShot 01](screenshots/mcsa_screenshot_01.png)
